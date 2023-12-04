@@ -4,6 +4,9 @@ import { useMeasure } from 'react-use'
 import * as THREE from 'three'
 import useMergeRefs from '../useMergeRefs'
 import { ThreeContext } from './ThreeContext'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
+import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
 
 interface Props {
 	readonly children: React.ReactNode
@@ -31,31 +34,39 @@ const ThreeBridge: React.FC<Props> = ({ children }) => {
 		[height, width],
 	)
 	const scene = useMemo(() => new THREE.Scene(), [])
+	const outlinePass = useMemo(
+		() =>
+			new OutlinePass(
+				new THREE.Vector2(width, height), //resolution parameter
+				scene,
+				camera,
+			),
+		[camera, height, scene, width],
+	)
 
 	// Threejs sample cube
 	useEffect(() => {
 		camera.position.z = 5
 
+		// post-processing for selection outlines
 		const raycaster = new THREE.Raycaster()
+		const composer = new EffectComposer(renderer)
+		const renderPass = new RenderPass(scene, camera)
+		composer.addPass(renderPass)
+		composer.addPass(outlinePass)
+
 		let frameRequestHandle: number | null = null
 		const render = () => {
 			frameRequestHandle = requestAnimationFrame(render)
 
+			// detect selection(s)
 			raycaster.setFromCamera(pointer, camera)
-			const intersects = new Set(
-				raycaster
-					.intersectObjects(scene.children)
-					.map(intersection => intersection.object),
-			)
-			for (const obj of scene.children) {
-				if (intersects.has(obj)) {
-					obj.material.color.set(0xff0000)
-				} else {
-					obj.material.color.set(0x00ff00)
-				}
-			}
+			const intersects = raycaster
+				.intersectObjects(scene.children)
+				.map(intersection => intersection.object)
+			outlinePass.selectedObjects = intersects
 
-			renderer.render(scene, camera)
+			composer.render()
 		}
 		render()
 
@@ -64,7 +75,7 @@ const ThreeBridge: React.FC<Props> = ({ children }) => {
 				cancelAnimationFrame(frameRequestHandle)
 			}
 		}
-	}, [camera, pointer, renderer, scene])
+	}, [camera, outlinePass, pointer, renderer, scene])
 
 	const onPointerMove: PointerEventHandler<HTMLDivElement> = event => {
 		// from https://threejs.org/docs/index.html#api/en/core/Raycaster
