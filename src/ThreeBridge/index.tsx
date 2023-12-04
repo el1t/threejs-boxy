@@ -2,9 +2,14 @@ import type { PointerEventHandler } from 'react'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useMeasure } from 'react-use'
 import * as THREE from 'three'
-import useMergeRefs from './useMergeRefs'
+import useMergeRefs from '../useMergeRefs'
+import { ThreeContext } from './ThreeContext'
 
-const ThreeBridge: React.FC = () => {
+interface Props {
+	readonly children: React.ReactNode
+}
+
+const ThreeBridge: React.FC<Props> = ({ children }) => {
 	const renderer = useMemo(() => new THREE.WebGLRenderer(), [])
 
 	// Insert renderer element
@@ -34,10 +39,10 @@ const ThreeBridge: React.FC = () => {
 		() => new THREE.PerspectiveCamera(75, width / height, 0.1, 1000),
 		[height, width],
 	)
+	const scene = useMemo(() => new THREE.Scene(), [])
 
 	// Threejs sample cube
 	useEffect(() => {
-		const scene = new THREE.Scene()
 		const geometry = new THREE.BoxGeometry(1, 1, 1)
 		const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
 		const cube = new THREE.Mesh(geometry, material)
@@ -73,7 +78,7 @@ const ThreeBridge: React.FC = () => {
 				cancelAnimationFrame(frameRequestHandle)
 			}
 		}
-	}, [camera, pointer, renderer])
+	}, [camera, pointer, renderer, scene])
 
 	const onPointerMove: PointerEventHandler<HTMLDivElement> = event => {
 		// from https://threejs.org/docs/index.html#api/en/core/Raycaster
@@ -93,8 +98,11 @@ const ThreeBridge: React.FC = () => {
 				left: 0,
 				right: 0,
 				bottom: 0,
-			}}
-		/>
+			}}>
+			<ThreeContext.Provider value={useMemo(() => ({ scene }), [scene])}>
+				{children}
+			</ThreeContext.Provider>
+		</div>
 	)
 }
 

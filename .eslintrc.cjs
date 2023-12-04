@@ -26,5 +26,6 @@ module.exports = {
 		'react/jsx-sort-props': ERROR,
 		'react/react-in-jsx-scope': OFF,
 		'react/jsx-uses-react': OFF,
+		'react/prop-types': OFF,
 	},
 }
