@@ -20,7 +20,8 @@ const AddButton: React.FC = () => {
 							.add(new THREE.Vector3(0, selection.dimensions.y * 1.05, 0)),
 					}),
 				)
-			}}>
+			}}
+			variant="contained">
 			Add Box Above
 		</Button>
 	)

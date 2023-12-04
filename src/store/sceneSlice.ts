@@ -20,6 +20,13 @@ const sceneSlice = createSlice({
 		addBox: (state, action: PayloadAction<BoxConfig>) => {
 			state.objects.push(createBox(action.payload))
 		},
+		deleteBox: (state, action: PayloadAction<Box['id']>) => {
+			const index = state.objects.findIndex(obj => obj.id === action.payload)
+			if (index < 0) {
+				return
+			}
+			state.objects.splice(index, 1)
+		},
 		updateSelectedBox: (state, action: PayloadAction<BoxConfig>) => {
 			const targetIndex = state.objects.findIndex(obj => obj.isSelected)
 			if (targetIndex < 0) {
@@ -43,7 +50,8 @@ const sceneSlice = createSlice({
 	},
 })
 
-export const { addBox, updateSelectedBox, selectBox } = sceneSlice.actions
+export const { addBox, deleteBox, updateSelectedBox, selectBox } =
+	sceneSlice.actions
 
 export const useSceneObjects = () =>
 	useAppSelector(state => state.scene.objects)
