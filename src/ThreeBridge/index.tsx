@@ -55,7 +55,7 @@ const ThreeBridge: React.FC<Props> = ({
 
 	const hoverOutlinePass = useMemo(() => {
 		const outline = new OutlinePass(
-			new THREE.Vector2(width, height), //resolution parameter
+			new THREE.Vector2(width, height),
 			scene,
 			camera,
 		)
@@ -64,7 +64,7 @@ const ThreeBridge: React.FC<Props> = ({
 	}, [camera, height, scene, width])
 	const selectionOutlinePass = useMemo(() => {
 		const outline = new OutlinePass(
-			new THREE.Vector2(width, height), //resolution parameter
+			new THREE.Vector2(width, height),
 			scene,
 			camera,
 		)

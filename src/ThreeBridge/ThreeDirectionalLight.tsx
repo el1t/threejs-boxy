@@ -33,6 +33,7 @@ const ThreeDirectionalLight: React.FC<Props> = ({
 
 		return () => {
 			light.removeFromParent()
+			lightTarget.removeFromParent()
 		}
 	}, [color, intensity, position, scene, targetPosition])
 
