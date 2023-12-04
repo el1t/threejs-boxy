@@ -136,11 +136,8 @@ const ThreeBridge: React.FC<Props> = ({
 
 const styles = Styles.create({
 	container: {
-		position: 'absolute',
-		top: 0,
-		left: 0,
-		right: 0,
-		bottom: 0,
+		height: '100%',
+		flexGrow: 1,
 	},
 })
 
