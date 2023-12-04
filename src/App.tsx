@@ -6,19 +6,20 @@ import * as THREE from 'three'
 
 let guid = 0
 
+const DEFAULT_BOX_SIZE = 1
+
 class Box {
 	readonly color: THREE.ColorRepresentation
-	readonly dimensions: THREE.Vector3
+	readonly dimensions: THREE.Vector3 = new THREE.Vector3(
+		DEFAULT_BOX_SIZE,
+		DEFAULT_BOX_SIZE,
+		DEFAULT_BOX_SIZE,
+	)
 	readonly id: number
 	readonly position: THREE.Vector3
 
-	constructor(
-		color: THREE.ColorRepresentation,
-		dimensions: THREE.Vector3,
-		position: THREE.Vector3,
-	) {
+	constructor(color: THREE.ColorRepresentation, position: THREE.Vector3) {
 		this.color = color
-		this.dimensions = dimensions
 		this.id = guid++
 		this.position = position
 	}
@@ -31,16 +32,14 @@ function App() {
 			...boxes,
 			new Box(
 				0xff00ff,
-				new THREE.Vector3(1, 1, 1),
-				object.position.clone().add(object.up.clone().multiplyScalar(1.1)),
+				object.position
+					.clone()
+					.add(object.up.clone().normalize().multiplyScalar(1.1)),
 			),
 		])
 	}
 	const onEmptyClick = (position: THREE.Vector3) => {
-		setBoxes([
-			...boxes,
-			new Box(0x00ff00, new THREE.Vector3(1, 1, 1), position),
-		])
+		setBoxes([...boxes, new Box(0x00ff00, position)])
 	}
 
 	return (

@@ -8,6 +8,9 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
 
+const CAMERA_FOV = 75
+const CAMERA_DISTANCE = 5
+
 interface Props {
 	readonly children: React.ReactNode
 	readonly onClickObject: (object: THREE.Object3D) => void
@@ -35,10 +38,16 @@ const ThreeBridge: React.FC<Props> = ({
 	}, [height, renderer, width])
 
 	const pointer = useMemo(() => new THREE.Vector2(NaN, NaN), [])
-	const camera = useMemo(
-		() => new THREE.PerspectiveCamera(75, width / height, 0.1, 1000),
-		[height, width],
-	)
+	const camera = useMemo(() => {
+		const cam = new THREE.PerspectiveCamera(
+			CAMERA_FOV,
+			width / height,
+			0.1,
+			1000,
+		)
+		cam.position.z = CAMERA_DISTANCE
+		return cam
+	}, [height, width])
 	const scene = useMemo(() => new THREE.Scene(), [])
 	const outlinePass = useMemo(
 		() =>
@@ -50,10 +59,7 @@ const ThreeBridge: React.FC<Props> = ({
 		[camera, height, scene, width],
 	)
 
-	// Threejs sample cube
 	useEffect(() => {
-		camera.position.z = 5
-
 		// post-processing for selection outlines
 		const raycaster = new THREE.Raycaster()
 		const composer = new EffectComposer(renderer)
@@ -96,7 +102,7 @@ const ThreeBridge: React.FC<Props> = ({
 		if (intersects.length === 0) {
 			// did not click on existing geometry
 			const emptyLocation = new THREE.Vector3()
-			raycaster.ray.at(5, emptyLocation)
+			raycaster.ray.at(CAMERA_DISTANCE, emptyLocation)
 			onEmptyClick(emptyLocation)
 		} else {
 			for (const intersect of intersects) {
