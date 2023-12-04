@@ -7,14 +7,14 @@ interface Props {
 	readonly box: Box
 }
 
-const ThreeCube: React.FC<Props> = ({ box }) => {
+const ThreeBox: React.FC<Props> = ({ box }) => {
 	const scene = useScene()
 	const { color, dimensions, id, isSelected, position } = box
 	const { x: width, y: height, z: depth } = dimensions
 
 	useEffect(() => {
 		const geometry = new THREE.BoxGeometry(width, height, depth)
-		const material = new THREE.MeshBasicMaterial({ color })
+		const material = new THREE.MeshStandardMaterial({ color })
 		const cube = new THREE.Mesh(geometry, material)
 		cube.position.set(position.x, position.y, position.z)
 		cube.userData.id = id
@@ -40,4 +40,4 @@ const ThreeCube: React.FC<Props> = ({ box }) => {
 	return null
 }
 
-export default ThreeCube
+export default ThreeBox

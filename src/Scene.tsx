@@ -1,7 +1,10 @@
+import * as THREE from 'three'
 import { useAppDispatch } from './store/hooks'
 import { addBox, selectBox, useSceneObjects } from './store/sceneSlice'
 import ThreeBridge from './ThreeBridge'
+import ThreeAmbientLight from './ThreeBridge/ThreeAmbientLight'
 import ThreeBox from './ThreeBridge/ThreeBox'
+import ThreeDirectionalLight from './ThreeBridge/ThreeDirectionalLight'
 
 const Scene: React.FC = () => {
 	const sceneObjects = useSceneObjects()
@@ -18,6 +21,13 @@ const Scene: React.FC = () => {
 			{sceneObjects.map(box => (
 				<ThreeBox box={box} key={box.id} />
 			))}
+			<ThreeAmbientLight color={0xffffff} />
+			<ThreeDirectionalLight
+				color={0xffffff}
+				intensity={1}
+				position={new THREE.Vector3(0, 20, 3)}
+				targetPosition={new THREE.Vector3(0, 0, 0)}
+			/>
 		</ThreeBridge>
 	)
 }
