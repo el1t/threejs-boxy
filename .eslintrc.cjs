@@ -11,12 +11,18 @@ module.exports = {
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
 		'plugin:react/recommended',
+		'plugin:react/jsx-runtime',
 		'plugin:react-hooks/recommended',
 		'plugin:prettier/recommended',
 	],
 	ignorePatterns: ['dist', '.eslintrc.cjs'],
 	parser: '@typescript-eslint/parser',
 	plugins: ['react-refresh', 'simple-import-sort', 'sort-keys-fix'],
+	settings: {
+		react: {
+			version: 'detect',
+		},
+	},
 	rules: {
 		'react-refresh/only-export-components': [
 			WARN,
@@ -24,8 +30,6 @@ module.exports = {
 		],
 		'prettier/prettier': ERROR,
 		'react/jsx-sort-props': ERROR,
-		'react/react-in-jsx-scope': OFF,
-		'react/jsx-uses-react': OFF,
 		'react/prop-types': OFF,
 	},
 }
