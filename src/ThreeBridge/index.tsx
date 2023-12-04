@@ -52,15 +52,26 @@ const ThreeBridge: React.FC<Props> = ({
 		return cam
 	}, [height, width])
 	const scene = useMemo(() => new THREE.Scene(), [])
-	const outlinePass = useMemo(
-		() =>
-			new OutlinePass(
-				new THREE.Vector2(width, height), //resolution parameter
-				scene,
-				camera,
-			),
-		[camera, height, scene, width],
-	)
+
+	const hoverOutlinePass = useMemo(() => {
+		const outline = new OutlinePass(
+			new THREE.Vector2(width, height), //resolution parameter
+			scene,
+			camera,
+		)
+		outline.visibleEdgeColor = new THREE.Color(0xffffff)
+		return outline
+	}, [camera, height, scene, width])
+	const selectionOutlinePass = useMemo(() => {
+		const outline = new OutlinePass(
+			new THREE.Vector2(width, height), //resolution parameter
+			scene,
+			camera,
+		)
+		outline.edgeStrength = 10
+		outline.visibleEdgeColor = new THREE.Color(0xffffff)
+		return outline
+	}, [camera, height, scene, width])
 
 	useEffect(() => {
 		// post-processing for selection outlines
@@ -68,18 +79,23 @@ const ThreeBridge: React.FC<Props> = ({
 		const composer = new EffectComposer(renderer)
 		const renderPass = new RenderPass(scene, camera)
 		composer.addPass(renderPass)
-		composer.addPass(outlinePass)
+		composer.addPass(hoverOutlinePass)
+		composer.addPass(selectionOutlinePass)
 
 		let frameRequestHandle: number | null = null
 		const render = () => {
 			frameRequestHandle = requestAnimationFrame(render)
 
-			// detect selection(s)
+			// detect hover(s)
 			raycaster.setFromCamera(pointer, camera)
 			const intersects = raycaster
 				.intersectObjects(scene.children)
 				.map(intersection => intersection.object)
-			outlinePass.selectedObjects = intersects
+			hoverOutlinePass.selectedObjects = intersects
+
+			selectionOutlinePass.selectedObjects = scene.children.filter(
+				obj => obj.userData.isSelected,
+			)
 
 			composer.render()
 		}
@@ -90,7 +106,7 @@ const ThreeBridge: React.FC<Props> = ({
 				cancelAnimationFrame(frameRequestHandle)
 			}
 		}
-	}, [camera, outlinePass, pointer, renderer, scene])
+	}, [camera, hoverOutlinePass, pointer, renderer, scene, selectionOutlinePass])
 
 	// Detect clicks and translate to world coordinates
 	const onClick: MouseEventHandler<HTMLDivElement> = event => {
@@ -108,9 +124,7 @@ const ThreeBridge: React.FC<Props> = ({
 			raycaster.ray.at(CAMERA_DISTANCE, emptyLocation)
 			onEmptyClick(emptyLocation)
 		} else {
-			for (const intersect of intersects) {
-				onClickObject(intersect)
-			}
+			onClickObject(intersects[0])
 		}
 	}
 

@@ -10,15 +10,17 @@ interface Props {
 
 const Scene: React.FC<Props> = ({ data, updateData }) => {
 	const onClickObject = (object: THREE.Object3D) => {
-		updateData([
-			...data,
-			new Box(
-				0xff00ff,
-				object.position
-					.clone()
-					.add(object.up.clone().normalize().multiplyScalar(1.1)),
-			),
-		])
+		const selectedId = object.userData.id
+		updateData(
+			data.map(obj => {
+				if (selectedId === obj.id) {
+					return obj.clone({ isSelected: true })
+				} else if (obj.isSelected) {
+					return obj.clone({ isSelected: false })
+				}
+				return obj
+			}),
+		)
 	}
 	const onEmptyClick = (position: THREE.Vector3) => {
 		updateData([...data, new Box(0x00ff00, position)])
@@ -27,12 +29,7 @@ const Scene: React.FC<Props> = ({ data, updateData }) => {
 	return (
 		<ThreeBridge onClickObject={onClickObject} onEmptyClick={onEmptyClick}>
 			{data.map(box => (
-				<ThreeBox
-					color={box.color}
-					dimensions={box.dimensions}
-					key={box.id}
-					position={box.position}
-				/>
+				<ThreeBox box={box} key={box.id} />
 			))}
 		</ThreeBridge>
 	)

@@ -1,15 +1,15 @@
 import * as THREE from 'three'
 import { useScene } from './ThreeContext'
 import { useEffect } from 'react'
+import Box from '../Box'
 
 interface Props {
-	readonly color: THREE.ColorRepresentation
-	readonly dimensions: THREE.Vector3
-	readonly position: THREE.Vector3
+	readonly box: Box
 }
 
-const ThreeCube: React.FC<Props> = ({ color, dimensions, position }) => {
+const ThreeCube: React.FC<Props> = ({ box }) => {
 	const scene = useScene()
+	const { color, dimensions, id, isSelected, position } = box
 	const { x: width, y: height, z: depth } = dimensions
 
 	useEffect(() => {
@@ -17,12 +17,25 @@ const ThreeCube: React.FC<Props> = ({ color, dimensions, position }) => {
 		const material = new THREE.MeshBasicMaterial({ color })
 		const cube = new THREE.Mesh(geometry, material)
 		cube.position.set(position.x, position.y, position.z)
+		cube.userData.id = id
+		cube.userData.isSelected = isSelected
 		scene.add(cube)
 
 		return () => {
 			cube.removeFromParent()
 		}
-	}, [color, depth, height, position.x, position.y, position.z, scene, width])
+	}, [
+		color,
+		depth,
+		height,
+		id,
+		isSelected,
+		position.x,
+		position.y,
+		position.z,
+		scene,
+		width,
+	])
 
 	return null
 }

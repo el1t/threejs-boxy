@@ -24,7 +24,7 @@ function App() {
 		<ThemeProvider theme={theme}>
 			<div css={styles.container}>
 				<Scene data={boxes} updateData={setBoxes} />
-				<Inspector />
+				<Inspector selection={boxes.find(box => box.isSelected)} />
 			</div>
 		</ThemeProvider>
 	)
