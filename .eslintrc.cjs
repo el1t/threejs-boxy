@@ -31,5 +31,6 @@ module.exports = {
 		'prettier/prettier': ERROR,
 		'react/jsx-sort-props': ERROR,
 		'react/prop-types': OFF,
+		'react/no-unknown-property': [ERROR, { ignore: ['css'] }],
 	},
 }

@@ -119,10 +119,7 @@ const ThreeBridge: React.FC<Props> = ({
 
 	return (
 		<div
-			onClick={onClick}
-			onPointerMove={onPointerMove}
-			ref={useMergeRefs(measureRef, divRef, callbackRef)}
-			style={{
+			css={{
 				height: '100vh',
 				width: '100vw',
 				position: 'absolute',
@@ -130,7 +127,10 @@ const ThreeBridge: React.FC<Props> = ({
 				left: 0,
 				right: 0,
 				bottom: 0,
-			}}>
+			}}
+			onClick={onClick}
+			onPointerMove={onPointerMove}
+			ref={useMergeRefs(measureRef, divRef, callbackRef)}>
 			<ThreeContext.Provider value={useMemo(() => ({ scene }), [scene])}>
 				{children}
 			</ThreeContext.Provider>
