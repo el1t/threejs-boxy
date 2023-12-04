@@ -26,6 +26,16 @@ class Box {
 
 function App() {
 	const [boxes, setBoxes] = useState<readonly Box[]>([])
+	const onClickObject = (object: THREE.Object3D) => {
+		setBoxes([
+			...boxes,
+			new Box(
+				0xff00ff,
+				new THREE.Vector3(1, 1, 1),
+				object.position.clone().add(object.up.clone().multiplyScalar(1.1)),
+			),
+		])
+	}
 	const onEmptyClick = (position: THREE.Vector3) => {
 		setBoxes([
 			...boxes,
@@ -34,7 +44,7 @@ function App() {
 	}
 
 	return (
-		<ThreeBridge onEmptyClick={onEmptyClick}>
+		<ThreeBridge onClickObject={onClickObject} onEmptyClick={onEmptyClick}>
 			{boxes.map(box => (
 				<ThreeBox
 					color={box.color}

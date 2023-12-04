@@ -10,10 +10,15 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
 
 interface Props {
 	readonly children: React.ReactNode
+	readonly onClickObject: (object: THREE.Object3D) => void
 	readonly onEmptyClick: (location: THREE.Vector3) => void
 }
 
-const ThreeBridge: React.FC<Props> = ({ children, onEmptyClick }) => {
+const ThreeBridge: React.FC<Props> = ({
+	children,
+	onClickObject,
+	onEmptyClick,
+}) => {
 	const renderer = useMemo(() => new THREE.WebGLRenderer(), [])
 
 	// Insert renderer element
@@ -93,6 +98,10 @@ const ThreeBridge: React.FC<Props> = ({ children, onEmptyClick }) => {
 			const emptyLocation = new THREE.Vector3()
 			raycaster.ray.at(5, emptyLocation)
 			onEmptyClick(emptyLocation)
+		} else {
+			for (const intersect of intersects) {
+				onClickObject(intersect)
+			}
 		}
 	}
 
