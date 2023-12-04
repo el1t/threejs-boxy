@@ -22,16 +22,7 @@ const ThreeBridge: React.FC<Props> = ({ children }) => {
 		[renderer.domElement],
 	)
 	useEffect(() => {
-		const { current } = divRef
-		if (current == null) {
-			return
-		}
-
 		renderer.setSize(width, height)
-		current.appendChild(renderer.domElement)
-		return () => {
-			current.removeChild(renderer.domElement)
-		}
 	}, [height, renderer, width])
 
 	const pointer = useMemo(() => new THREE.Vector2(NaN, NaN), [])
@@ -43,11 +34,6 @@ const ThreeBridge: React.FC<Props> = ({ children }) => {
 
 	// Threejs sample cube
 	useEffect(() => {
-		const geometry = new THREE.BoxGeometry(1, 1, 1)
-		const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-		const cube = new THREE.Mesh(geometry, material)
-		scene.add(cube)
-
 		camera.position.z = 5
 
 		const raycaster = new THREE.Raycaster()
