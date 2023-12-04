@@ -4,24 +4,25 @@ import { useEffect } from 'react'
 
 interface Props {
 	readonly color: THREE.ColorRepresentation
-	readonly depth: number
-	readonly height: number
-	readonly width: number
+	readonly dimensions: THREE.Vector3
+	readonly position: THREE.Vector3
 }
 
-const ThreeCube: React.FC<Props> = ({ color, depth, height, width }) => {
+const ThreeCube: React.FC<Props> = ({ color, dimensions, position }) => {
 	const scene = useScene()
+	const { x: width, y: height, z: depth } = dimensions
 
 	useEffect(() => {
 		const geometry = new THREE.BoxGeometry(width, height, depth)
 		const material = new THREE.MeshBasicMaterial({ color })
 		const cube = new THREE.Mesh(geometry, material)
+		cube.position.set(position.x, position.y, position.z)
 		scene.add(cube)
 
 		return () => {
 			cube.removeFromParent()
 		}
-	}, [color, depth, height, scene, width])
+	}, [color, depth, height, position.x, position.y, position.z, scene, width])
 
 	return null
 }

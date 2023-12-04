@@ -1,4 +1,4 @@
-import type { PointerEventHandler } from 'react'
+import type { MouseEventHandler, PointerEventHandler } from 'react'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useMeasure } from 'react-use'
 import * as THREE from 'three'
@@ -10,9 +10,10 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
 
 interface Props {
 	readonly children: React.ReactNode
+	readonly onEmptyClick: (location: THREE.Vector3) => void
 }
 
-const ThreeBridge: React.FC<Props> = ({ children }) => {
+const ThreeBridge: React.FC<Props> = ({ children, onEmptyClick }) => {
 	const renderer = useMemo(() => new THREE.WebGLRenderer(), [])
 
 	// Insert renderer element
@@ -77,6 +78,24 @@ const ThreeBridge: React.FC<Props> = ({ children }) => {
 		}
 	}, [camera, outlinePass, pointer, renderer, scene])
 
+	// Detect clicks and translate to world coordinates
+	const onClick: MouseEventHandler<HTMLDivElement> = event => {
+		const x = (event.clientX / width) * 2 - 1
+		const y = -(event.clientY / height) * 2 + 1
+		const location = new THREE.Vector2(x, y)
+		const raycaster = new THREE.Raycaster()
+		raycaster.setFromCamera(location, camera)
+		const intersects = raycaster
+			.intersectObjects(scene.children)
+			.map(intersection => intersection.object)
+		if (intersects.length === 0) {
+			// did not click on existing geometry
+			const emptyLocation = new THREE.Vector3()
+			raycaster.ray.at(5, emptyLocation)
+			onEmptyClick(emptyLocation)
+		}
+	}
+
 	const onPointerMove: PointerEventHandler<HTMLDivElement> = event => {
 		// from https://threejs.org/docs/index.html#api/en/core/Raycaster
 		pointer.x = (event.clientX / width) * 2 - 1
@@ -85,6 +104,7 @@ const ThreeBridge: React.FC<Props> = ({ children }) => {
 
 	return (
 		<div
+			onClick={onClick}
 			onPointerMove={onPointerMove}
 			ref={useMergeRefs(measureRef, divRef, callbackRef)}
 			style={{
