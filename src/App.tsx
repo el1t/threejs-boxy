@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react'
-import Box from './Box'
+import { useMemo } from 'react'
 import Scene from './Scene'
 import Styles from './Styles'
 import Inspector from './Inspector'
 import { ThemeProvider, createTheme, useMediaQuery } from '@mui/material'
+import store from './store'
+import { Provider } from 'react-redux'
 
 function App() {
 	const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
@@ -18,15 +19,15 @@ function App() {
 		[prefersDarkMode],
 	)
 
-	const [boxes, setBoxes] = useState<readonly Box[]>([])
-
 	return (
-		<ThemeProvider theme={theme}>
-			<div css={styles.container}>
-				<Scene data={boxes} updateData={setBoxes} />
-				<Inspector selection={boxes.find(box => box.isSelected)} />
-			</div>
-		</ThemeProvider>
+		<Provider store={store}>
+			<ThemeProvider theme={theme}>
+				<div css={styles.container}>
+					<Scene />
+					<Inspector />
+				</div>
+			</ThemeProvider>
+		</Provider>
 	)
 }
 

@@ -1,5 +1,5 @@
 import { Box as MuiBox, TextField, Typography } from '@mui/material'
-import Box from '../Box'
+import type { Box } from '../store/Box'
 import Styles from '../Styles'
 
 interface Props {

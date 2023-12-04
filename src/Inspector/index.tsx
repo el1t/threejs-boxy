@@ -1,14 +1,14 @@
 import { Paper, Typography } from '@mui/material'
-import Box from '../Box'
 import Styles from '../Styles'
 import DetailList from './DetailList'
+import { useSelectedObject } from '../store/sceneSlice'
 
 interface Props {
 	readonly className?: string
-	readonly selection: Box | undefined
 }
 
-const Inspector: React.FC<Props> = ({ className, selection }) => {
+const Inspector: React.FC<Props> = ({ className }) => {
+	const selection = useSelectedObject()
 	return (
 		<Paper className={className} css={styles.container}>
 			<Typography css={styles.title} variant="h5">

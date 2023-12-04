@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { useScene } from './ThreeContext'
 import { useEffect } from 'react'
-import Box from '../Box'
+import type { Box } from '../store/Box'
 
 interface Props {
 	readonly box: Box
