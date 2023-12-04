@@ -68,7 +68,7 @@ const DetailList: React.FC<Props> = ({ box }) => {
 						dispatchBoxUpdate({
 							dimensions: box.dimensions
 								.clone()
-								.setX(Number(event.target.value)),
+								.setY(Number(event.target.value)),
 						})
 					}
 					type="number"
@@ -80,7 +80,7 @@ const DetailList: React.FC<Props> = ({ box }) => {
 						dispatchBoxUpdate({
 							dimensions: box.dimensions
 								.clone()
-								.setX(Number(event.target.value)),
+								.setZ(Number(event.target.value)),
 						})
 					}
 					type="number"
