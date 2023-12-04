@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { useAppDispatch } from './store/hooks'
-import { addBox, selectBox, useSceneObjects } from './store/sceneSlice'
+import { addBoxAndSelect, selectBox, useSceneObjects } from './store/sceneSlice'
 import ThreeBridge from './ThreeBridge'
 import ThreeAmbientLight from './ThreeBridge/ThreeAmbientLight'
 import ThreeBox from './ThreeBridge/ThreeBox'
@@ -13,7 +13,7 @@ const Scene: React.FC = () => {
 		dispatch(selectBox(object.userData.id))
 	}
 	const onEmptyClick = (position: THREE.Vector3) => {
-		dispatch(addBox({ color: 0x00ff00, position }))
+		dispatch(addBoxAndSelect({ color: 0x00ff00, position }))
 	}
 
 	return (

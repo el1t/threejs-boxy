@@ -17,8 +17,11 @@ const sceneSlice = createSlice({
 	initialState,
 	name: 'scene',
 	reducers: {
-		addBox: (state, action: PayloadAction<BoxConfig>) => {
-			state.objects.push(createBox(action.payload))
+		addBoxAndSelect: (state, action: PayloadAction<BoxConfig>) => {
+			for (const obj of state.objects) {
+				obj.isSelected = false
+			}
+			state.objects.push(createBox({ ...action.payload, isSelected: true }))
 		},
 		deleteBox: (state, action: PayloadAction<Box['id']>) => {
 			const index = state.objects.findIndex(obj => obj.id === action.payload)
@@ -50,7 +53,7 @@ const sceneSlice = createSlice({
 	},
 })
 
-export const { addBox, deleteBox, updateSelectedBox, selectBox } =
+export const { addBoxAndSelect, deleteBox, updateSelectedBox, selectBox } =
 	sceneSlice.actions
 
 export const useSceneObjects = () =>

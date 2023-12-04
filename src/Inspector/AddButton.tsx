@@ -1,5 +1,5 @@
 import { Button } from '@mui/material'
-import { addBox, useSelectedObject } from '../store/sceneSlice'
+import { addBoxAndSelect, useSelectedObject } from '../store/sceneSlice'
 import * as THREE from 'three'
 import { useAppDispatch } from '../store/hooks'
 
@@ -13,7 +13,7 @@ const AddButton: React.FC = () => {
 					return
 				}
 				dispatch(
-					addBox({
+					addBoxAndSelect({
 						color: 0xff00ff,
 						position: selection.position
 							.clone()
