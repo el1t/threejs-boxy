@@ -3,6 +3,7 @@ import ThreeBridge from './ThreeBridge'
 import ThreeBox from './ThreeBridge/ThreeBox'
 
 interface Props {
+	readonly className?: string
 	readonly data: readonly Box[]
 	readonly updateData: (newBoxes: readonly Box[]) => void
 }

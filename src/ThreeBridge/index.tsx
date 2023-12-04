@@ -7,17 +7,20 @@ import { ThreeContext } from './ThreeContext'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
+import Styles from '../Styles'
 
 const CAMERA_FOV = 75
 const CAMERA_DISTANCE = 5
 
 interface Props {
+	readonly className?: string
 	readonly children: React.ReactNode
 	readonly onClickObject: (object: THREE.Object3D) => void
 	readonly onEmptyClick: (location: THREE.Vector3) => void
 }
 
 const ThreeBridge: React.FC<Props> = ({
+	className,
 	children,
 	onClickObject,
 	onEmptyClick,
@@ -119,15 +122,8 @@ const ThreeBridge: React.FC<Props> = ({
 
 	return (
 		<div
-			css={{
-				height: '100vh',
-				width: '100vw',
-				position: 'absolute',
-				top: 0,
-				left: 0,
-				right: 0,
-				bottom: 0,
-			}}
+			className={className}
+			css={styles.container}
 			onClick={onClick}
 			onPointerMove={onPointerMove}
 			ref={useMergeRefs(measureRef, divRef, callbackRef)}>
@@ -137,5 +133,15 @@ const ThreeBridge: React.FC<Props> = ({
 		</div>
 	)
 }
+
+const styles = Styles.create({
+	container: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+	},
+})
 
 export default ThreeBridge
