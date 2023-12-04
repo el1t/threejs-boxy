@@ -9,5 +9,5 @@ tab_width=2
 [*.{js,jsx,ts,tsx}]
 tab_width=2
 
-[package.json]
+[package.json,package-lock.json]
 indent_style=space
