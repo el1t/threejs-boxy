@@ -1,6 +1,7 @@
 import { Paper, Typography } from '@mui/material'
 import Box from '../Box'
 import Styles from '../Styles'
+import DetailList from './DetailList'
 
 interface Props {
 	readonly className?: string
@@ -10,14 +11,16 @@ interface Props {
 const Inspector: React.FC<Props> = ({ className, selection }) => {
 	return (
 		<Paper className={className} css={styles.container}>
-			<Typography css={styles.title} variant="body1">
+			<Typography css={styles.title} variant="h5">
 				Inspector
 			</Typography>
 			{selection == null ? (
 				<Typography variant="body2">
 					Click an existing object or click anywhere to create a new object
 				</Typography>
-			) : null}
+			) : (
+				<DetailList box={selection} />
+			)}
 		</Paper>
 	)
 }
@@ -29,7 +32,7 @@ const styles = Styles.create({
 		width: '25vw',
 	},
 	title: {
-		marginBottom: 12,
+		marginBottom: 24,
 	},
 })
 
