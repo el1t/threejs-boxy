@@ -2,6 +2,7 @@ import { Paper, Typography } from '@mui/material'
 import Styles from '../Styles'
 import DetailList from './DetailList'
 import { useSelectedObject } from '../store/sceneSlice'
+import AddButton from './AddButton'
 
 interface Props {
 	readonly className?: string
@@ -19,7 +20,10 @@ const Inspector: React.FC<Props> = ({ className }) => {
 					Click an existing object or click anywhere to create a new object
 				</Typography>
 			) : (
-				<DetailList box={selection} />
+				<>
+					<DetailList box={selection} />
+					<AddButton />
+				</>
 			)}
 		</Paper>
 	)
