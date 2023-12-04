@@ -10,7 +10,7 @@ const Scene: React.FC = () => {
 	const sceneObjects = useSceneObjects()
 	const dispatch = useAppDispatch()
 	const onClickObject = (object: THREE.Object3D) => {
-		dispatch(selectBox(object.userData.id))
+		dispatch(selectBox(object.userData.id as number))
 	}
 	const onEmptyClick = (position: THREE.Vector3) => {
 		dispatch(addBoxAndSelect({ color: 0x00ff00, position }))

@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 
 /** Given an object `{className: {...styles}}`, call `css()` on each `styles` object */
 const create = <
-	T extends { readonly [name: string]: Parameters<typeof css>[0] },
+	T extends Readonly<Record<string, Parameters<typeof css>[0]>>,
 	R extends { readonly [name in keyof T]: ReturnType<typeof css> },
 >(
 	classNames: T,
