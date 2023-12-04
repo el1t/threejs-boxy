@@ -6,12 +6,14 @@ const DEFAULT_BOX_SIZE = 1
 
 export interface Box {
 	readonly _tag: unique symbol
-	readonly color: THREE.ColorRepresentation
+	readonly color: number
 	readonly dimensions: THREE.Vector3
 	readonly id: number
 	readonly isSelected: boolean
 	readonly position: THREE.Vector3
 }
+
+type BoxConfig = Readonly<Partial<Omit<Box, '_tag' | 'id'>>>
 
 export const createBox = ({
 	color = 0xffffff,
@@ -22,7 +24,7 @@ export const createBox = ({
 	),
 	isSelected = false,
 	position = new THREE.Vector3(0, 0, 0),
-}: Readonly<Partial<Box>>): Box =>
+}: BoxConfig): Box =>
 	({
 		color,
 		dimensions,

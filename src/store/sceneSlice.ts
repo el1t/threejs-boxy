@@ -3,6 +3,8 @@ import type { Box } from './Box'
 import { createBox } from './Box'
 import { useAppSelector } from './hooks'
 
+type BoxConfig = Parameters<typeof createBox>[0]
+
 interface SceneState {
 	objects: readonly Box[]
 }
@@ -15,8 +17,19 @@ const sceneSlice = createSlice({
 	initialState,
 	name: 'scene',
 	reducers: {
-		addBox: (state, action: PayloadAction<Readonly<Partial<Box>>>) => {
+		addBox: (state, action: PayloadAction<BoxConfig>) => {
 			state.objects.push(createBox(action.payload))
+		},
+		updateSelectedBox: (state, action: PayloadAction<BoxConfig>) => {
+			const targetIndex = state.objects.findIndex(obj => obj.isSelected)
+			if (targetIndex < 0) {
+				// nothing is selected
+				return
+			}
+			state.objects[targetIndex] = {
+				...state.objects[targetIndex],
+				...action.payload,
+			}
 		},
 		selectBox: (state, action: PayloadAction<Box['id']>) => {
 			for (const obj of state.objects) {
@@ -30,7 +43,7 @@ const sceneSlice = createSlice({
 	},
 })
 
-export const { addBox, selectBox } = sceneSlice.actions
+export const { addBox, updateSelectedBox, selectBox } = sceneSlice.actions
 
 export const useSceneObjects = () =>
 	useAppSelector(state => state.scene.objects)
